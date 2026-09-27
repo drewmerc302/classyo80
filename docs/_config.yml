@@ -1,0 +1,10 @@
+# GitHub Pages serves this folder as the app's support and privacy pages, which App Store Connect
+# requires as URLs. Everything that is developer documentation stays out of the published site.
+title: Classy-O 80
+description: An 8-digit desk calculator for iPhone and iPad
+theme: jekyll-theme-minimal
+exclude:
+  - appstore
+  - screenshots
+  - SPEC.md
+  - RELEASE.md

@@ -1,0 +1,115 @@
+name: ClassyO80
+
+options:
+  bundleIdPrefix: com.drewmerc
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+
+configs:
+  Debug: debug
+  Release: release
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    DEVELOPMENT_TEAM: 9247884EWA
+    CODE_SIGN_STYLE: Automatic
+    # Bump MARKETING_VERSION for a new App Store version; CURRENT_PROJECT_VERSION must rise for
+    # every build uploaded against the same version. See docs/RELEASE.md.
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+  configs:
+    Release:
+      SWIFT_COMPILATION_MODE: wholemodule
+      SWIFT_OPTIMIZATION_LEVEL: "-O"
+      # App Store builds need the dSYMs for readable crash reports in Xcode Organizer.
+      DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+      VALIDATE_PRODUCT: YES
+
+packages:
+  CalcEngine:
+    path: Packages/CalcEngine
+
+targets:
+  ClassyO80:
+    type: application
+    platform: iOS
+    sources:
+      - path: ClassyO80
+        excludes:
+          - PrivacyInfo.xcprivacy
+      # Must land at the bundle root, so copy it rather than letting inference decide.
+      - path: ClassyO80/PrivacyInfo.xcprivacy
+        buildPhase: resources
+    dependencies:
+      - package: CalcEngine
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.drewmerc.classyO80
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_PREVIEWS: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Classy-O 80
+        INFOPLIST_KEY_NSHumanReadableCopyright: Copyright © 2026 Andrew Mercurio. All rights reserved.
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+        # The calculator is always dark; matching the launch screen keeps a cold start from
+        # flashing white before the first frame.
+        INFOPLIST_KEY_UIUserInterfaceStyle: Dark
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_UIColorName: LaunchBackground
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: >-
+          UIInterfaceOrientationPortrait
+          UIInterfaceOrientationPortraitUpsideDown
+          UIInterfaceOrientationLandscapeLeft
+          UIInterfaceOrientationLandscapeRight
+
+  ClassyO80Tests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - ClassyO80Tests
+    dependencies:
+      - target: ClassyO80
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.drewmerc.classyO80Tests
+        GENERATE_INFOPLIST_FILE: YES
+
+  ClassyO80UITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - ClassyO80UITests
+    dependencies:
+      - target: ClassyO80
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.drewmerc.classyO80UITests
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  ClassyO80:
+    build:
+      targets:
+        ClassyO80: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - ClassyO80Tests
+        - ClassyO80UITests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
